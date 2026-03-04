@@ -1,0 +1,13 @@
+---
+servers:
+- url: "http://localhost:8080"
+openapi: "3.0.0"
+paths:
+  /menu/{id}:
+    $ref: "./restaurant.yaml#/paths/~1menu~1{id}"
+  /menu:
+    $ref: "./restaurant.yaml#/paths/~1menu"
+info:
+  title: "merged spec"
+  description: "merged spec"
+  version: "1.0.0"

@@ -1,0 +1,146 @@
+openapi: 3.0.0
+info:
+  title: Restaurant Menu API
+  description: API a restaurant menu items nyilvántartására.
+  version: 1.0.0
+
+servers:
+  - url: https://oe-html-5-2025-tavasz.wiremockapi.cloud/api
+  - url: http://localhost:8080/api
+    description: Helyi fejlesztői szerver
+
+paths:
+  /menu:
+    get:
+      summary: Menüelemek listázása
+      description: Lekérdezi az összes ételt és italt.
+      responses:
+        "200":
+          description: Menüelemek sikeresen lekérdezve
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MenuItem"
+              example:
+                - id: 1
+                  name: Pizza Margherita
+                  category: MAIN_COURSE
+                  sugarFree: false
+                  glutenFree: false
+                - id: 2
+                  name: Cheesecake
+                  category: DESSERT
+                  sugarFree: false
+                  glutenFree: false
+                - id: 3
+                  name: Cola Zero
+                  category: DRINK
+                  sugarFree: true
+                  glutenFree: true
+
+    post:
+      summary: Új menüelem hozzáadása
+      description: Új étel vagy ital hozzáadása a menühöz.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuItem"
+      responses:
+        "201":
+          description: Menüelem sikeresen hozzáadva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItem"
+
+  /menu/{id}:
+    get:
+      summary: Menüelem lekérdezése
+      description: Egy adott menüelem lekérdezése ID alapján.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Menüelem sikeresen lekérdezve
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItem"
+        "404":
+          description: Menüelem nem található
+
+    put:
+      summary: Menüelem módosítása
+      description: Menüelem módosítása ID alapján.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuItem"
+      responses:
+        "200":
+          description: Menüelem sikeresen módosítva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItem"
+        "404":
+          description: Menüelem nem található
+
+    delete:
+      summary: Menüelem törlése
+      description: Menüelem törlése ID alapján.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Menüelem sikeresen törölve
+        "404":
+          description: Menüelem nem található
+
+components:
+  schemas:
+    MenuItem:
+      type: object
+      required:
+        - id
+        - name
+        - category
+      properties:
+        id:
+          type: integer
+          description: Menüelem azonosítója
+        name:
+          type: string
+          description: Az étel vagy ital neve
+        category:
+          type: string
+          enum:
+            - MAIN_COURSE
+            - DESSERT
+            - DRINK
+        sugarFree:
+          type: boolean
+          description: Cukormentes-e
+        glutenFree:
+          type: boolean
+          description: Gluténmentes-e

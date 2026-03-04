@@ -1,0 +1,10 @@
+hu\oe\yokudlela\RestaurantApp.class
+hu\oe\yokudlela\customer\generated\rest\model\MenuItem$MenuItemBuilder.class
+hu\oe\yokudlela\rest\RestaurantController.class
+hu\oe\yokudlela\restaurant\generated\rest\api\DefaultApi.class
+hu\oe\yokudlela\customer\generated\rest\api\DefaultApi.class
+hu\oe\yokudlela\customer\generated\rest\model\MenuItem$CategoryEnum.class
+hu\oe\yokudlela\customer\generated\rest\model\MenuItem.class
+hu\oe\yokudlela\restaurant\generated\rest\model\MenuItem$MenuItemBuilder.class
+hu\oe\yokudlela\restaurant\generated\rest\model\MenuItem$CategoryEnum.class
+hu\oe\yokudlela\restaurant\generated\rest\model\MenuItem.class
