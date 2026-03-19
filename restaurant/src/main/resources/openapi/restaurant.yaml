@@ -56,6 +56,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MenuItem"
+        "400":
+          description: A menüelem már létezik
+          content:
+            application/json:
+              schema:
+                type: object
+                schema:
+                  $ref: "#/components/schemas/ApiError"
+                example:
+                  path: "/customers"
+                  message: "error.validation"
+                  errors:
+                    - "error.menuitem.name.exists"
 
   /menu/{id}:
     get:
@@ -74,8 +87,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MenuItem"
-        "404":
-          description: Menüelem nem található
+        "400":
+          description: A menüelem nem található
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Menüelem nem található
 
     put:
       summary: Menüelem módosítása
@@ -99,8 +120,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MenuItem"
-        "404":
-          description: Menüelem nem található
+        "400":
+          description: A menüelem nem található
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Menüelem nem található
 
     delete:
       summary: Menüelem törlése
@@ -114,8 +143,16 @@ paths:
       responses:
         "204":
           description: Menüelem sikeresen törölve
-        "404":
-          description: Menüelem nem található
+        "400":
+          description: A menüelem nem található
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Menüelem nem található
 
 components:
   schemas:
@@ -129,18 +166,40 @@ components:
         id:
           type: integer
           description: Menüelem azonosítója
+
         name:
           type: string
           description: Az étel vagy ital neve
+          x-field-extra-annotation: '@hu.oe.yokudlela.customer.validation.NameExists(message="error.menuitem.name.exists")'
+
         category:
           type: string
           enum:
             - MAIN_COURSE
             - DESSERT
             - DRINK
+
         sugarFree:
           type: boolean
           description: Cukormentes-e
+
         glutenFree:
           type: boolean
           description: Gluténmentes-e
+
+    ApiError:
+      type: object
+      properties:
+        path:
+          type: string
+          description: A kérés útvonala (pl. /menu)
+
+        message:
+          type: string
+          description: Fő hibaüzenet (pl. error.validation)
+
+        errors:
+          type: array
+          items:
+            type: string
+          description: Részletes validációs hibák listája
