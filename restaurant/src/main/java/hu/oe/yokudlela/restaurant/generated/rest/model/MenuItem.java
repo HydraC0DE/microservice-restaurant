@@ -32,6 +32,7 @@ public class MenuItem implements Serializable {
 
   private Integer id;
 
+  @hu.oe.yokudlela.restaurant.validation.NameExists(message="error.menuitem.name.exists")
   private String name;
 
   /**

@@ -1,4 +1,5 @@
-package hu.oe.yokudlela.rest.validation;
+package hu.oe.yokudlela.restaurant.validation;
+import hu.oe.yokudlela.restaurant.services.MenuService;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -23,8 +24,7 @@ public @interface NameExists {
 @Slf4j
 class NameExistsValidator implements ConstraintValidator<NameExists, String> {
 
-    private final MenuService menuService;  // inject your service
-
+    private final MenuService menuService;  // inject
     String message;
 
     @Override
@@ -34,11 +34,7 @@ class NameExistsValidator implements ConstraintValidator<NameExists, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isBlank()) return true; // blank handled by @NotBlank
-        boolean exists = menuService.existsByName(value); // check if name already exists
-        if (exists) {
-            log.warn("Validation failed: menu item '{}' already exists", value);
-        }
-        return !exists; // return true if valid, false if duplicate
+        if (value == null || value.isBlank()) return true;
+        return !menuService.existsByName(value);
     }
 }

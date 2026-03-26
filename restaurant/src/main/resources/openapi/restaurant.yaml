@@ -9,7 +9,29 @@ servers:
   - url: http://localhost:8080/api
     description: Helyi fejlesztői szerver
 
+
 paths:
+  /menu/gluten-free:
+    get:
+      summary: List only gluten-free menu items
+      operationId: menuGlutenFreeGet
+      tags:
+        - Default
+      responses:
+        '200':
+          description: Successfully retrieved gluten-free menu items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuItem'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /menu:
     get:
       summary: Menüelemek listázása
@@ -65,11 +87,32 @@ paths:
                 schema:
                   $ref: "#/components/schemas/ApiError"
                 example:
-                  path: "/customers"
+                  path: "/restaurant"
                   message: "error.validation"
                   errors:
                     - "error.menuitem.name.exists"
-
+  paths:
+    /menu/gluten-free:
+      get:
+        summary: List only gluten-free menu items
+        operationId: menuGlutenFreeGet
+        tags:
+          - Default
+        responses:
+          '200':
+            description: Successfully retrieved gluten-free menu items
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MenuItem'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiError'
   /menu/{id}:
     get:
       summary: Menüelem lekérdezése
@@ -170,7 +213,7 @@ components:
         name:
           type: string
           description: Az étel vagy ital neve
-          x-field-extra-annotation: '@hu.oe.yokudlela.customer.validation.NameExists(message="error.menuitem.name.exists")'
+          x-field-extra-annotation: '@hu.oe.yokudlela.restaurant.validation.NameExists(message="error.menuitem.name.exists")'
 
         category:
           type: string
