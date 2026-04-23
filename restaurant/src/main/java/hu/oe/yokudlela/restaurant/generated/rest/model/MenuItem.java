@@ -35,6 +35,9 @@ public class MenuItem implements Serializable {
   @hu.oe.yokudlela.restaurant.validation.NameExists(message="error.menuitem.name.exists")
   private String name;
 
+  @hu.oe.yokudlela.restaurant.validation.ValidOrderQuantity(message="error.quantity.invalid")
+  private Integer quantity;
+
   /**
    * Gets or Sets category
    */

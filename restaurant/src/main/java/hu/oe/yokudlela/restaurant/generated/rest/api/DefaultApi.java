@@ -41,14 +41,16 @@ public interface DefaultApi {
 
     /**
      * GET /menu : Menüelemek listázása
-     * Lekérdezi az összes ételt és italt.
+     * Lekérdezi az összes ételt és italt, opcionálisan szűrve cukormentes vagy gluténmentes elemekre.
      *
+     * @param sugarFree Csak cukormentes elemek listázása (optional)
+     * @param glutenFree Csak gluténmentes elemek listázása (optional)
      * @return Menüelemek sikeresen lekérdezve (status code 200)
      */
     @Operation(
         operationId = "menuGet",
         summary = "Menüelemek listázása",
-        description = "Lekérdezi az összes ételt és italt.",
+        description = "Lekérdezi az összes ételt és italt, opcionálisan szűrve cukormentes vagy gluténmentes elemekre.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Menüelemek sikeresen lekérdezve", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MenuItem.class)))
@@ -62,7 +64,8 @@ public interface DefaultApi {
     )
     
     ResponseEntity<List<MenuItem>> menuGet(
-        
+        @Parameter(name = "sugarFree", description = "Csak cukormentes elemek listázása", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sugarFree", required = false) Boolean sugarFree,
+        @Parameter(name = "glutenFree", description = "Csak gluténmentes elemek listázása", in = ParameterIn.QUERY) @Valid @RequestParam(value = "glutenFree", required = false) Boolean glutenFree
     );
 
 
@@ -210,7 +213,7 @@ public interface DefaultApi {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = MenuItem.class))
             }),
             @ApiResponse(responseCode = "400", description = "A menüelem már létezik", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Object.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
     )

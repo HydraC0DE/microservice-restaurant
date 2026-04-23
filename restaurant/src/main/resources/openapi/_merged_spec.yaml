@@ -7,8 +7,6 @@ paths:
     $ref: "./restaurant.yaml#/paths/~1menu~1gluten-free"
   /menu/{id}:
     $ref: "./restaurant.yaml#/paths/~1menu~1{id}"
-  paths:
-    $ref: "./restaurant.yaml#/paths/paths"
   /menu:
     $ref: "./restaurant.yaml#/paths/~1menu"
 info:

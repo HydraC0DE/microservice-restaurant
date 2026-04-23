@@ -9,7 +9,6 @@ servers:
   - url: http://localhost:8080/api
     description: Helyi fejlesztői szerver
 
-
 paths:
   /menu/gluten-free:
     get:
@@ -32,10 +31,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+
   /menu:
     get:
       summary: Menüelemek listázása
-      description: Lekérdezi az összes ételt és italt.
+      description: Lekérdezi az összes ételt és italt, opcionálisan szűrve cukormentes vagy gluténmentes elemekre.
+      parameters:
+        - in: query
+          name: sugarFree
+          required: false
+          schema:
+            type: boolean
+          description: Csak cukormentes elemek listázása
+        - in: query
+          name: glutenFree
+          required: false
+          schema:
+            type: boolean
+          description: Csak gluténmentes elemek listázása
       responses:
         "200":
           description: Menüelemek sikeresen lekérdezve
@@ -63,6 +76,7 @@ paths:
                   glutenFree: true
 
     post:
+      operationId: menuPost
       summary: Új menüelem hozzáadása
       description: Új étel vagy ital hozzáadása a menühöz.
       requestBody:
@@ -83,36 +97,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                schema:
-                  $ref: "#/components/schemas/ApiError"
-                example:
-                  path: "/restaurant"
-                  message: "error.validation"
-                  errors:
-                    - "error.menuitem.name.exists"
-  paths:
-    /menu/gluten-free:
-      get:
-        summary: List only gluten-free menu items
-        operationId: menuGlutenFreeGet
-        tags:
-          - Default
-        responses:
-          '200':
-            description: Successfully retrieved gluten-free menu items
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/MenuItem'
-          '400':
-            description: Bad request
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
+
   /menu/{id}:
     get:
       summary: Menüelem lekérdezése
@@ -205,27 +191,32 @@ components:
         - id
         - name
         - category
+        - quantity
+        - sugarFree
+        - glutenFree
       properties:
         id:
           type: integer
           description: Menüelem azonosítója
-
         name:
           type: string
           description: Az étel vagy ital neve
           x-field-extra-annotation: '@hu.oe.yokudlela.restaurant.validation.NameExists(message="error.menuitem.name.exists")'
-
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 20
+          description: A rendelni kívánt mennyiség
+          x-field-extra-annotation: '@hu.oe.yokudlela.restaurant.validation.ValidOrderQuantity(message="error.quantity.invalid")'
         category:
           type: string
           enum:
             - MAIN_COURSE
             - DESSERT
             - DRINK
-
         sugarFree:
           type: boolean
           description: Cukormentes-e
-
         glutenFree:
           type: boolean
           description: Gluténmentes-e
@@ -236,11 +227,9 @@ components:
         path:
           type: string
           description: A kérés útvonala (pl. /menu)
-
         message:
           type: string
           description: Fő hibaüzenet (pl. error.validation)
-
         errors:
           type: array
           items:
