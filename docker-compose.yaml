@@ -14,6 +14,26 @@ services:
     networks:
       - oe-network
 
+  restaurant:
+    container_name: restaurant
+    image: eclipse-temurin:21-jdk
+    depends_on:
+      - postgres
+    working_dir: /app
+    volumes:
+      - ./restaurant/target/restaurant.jar:/app/restaurant.jar
+    command: [ "java", "-jar", "restaurant.jar" ]
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/oe
+      SPRING_DATASOURCE_USERNAME: oeuser
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - oe-network
+
+
 networks:
   oe-network:
     driver: bridge
