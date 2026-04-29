@@ -1,0 +1,15 @@
+restaurant/lifecycle/clean genereated openapi
+restaurant/plugins/hibernate/smth2java generates entity for datbase
+run: spring-boot:run
+docker: nem emlékszem
+docker compose -f docker-compose.yaml down -v
+docker compose -f docker-compose.yaml up -d
+docker ps
+
+database:
+
+Host	localhost
+Port	5432
+User	oeuser
+Password	password
+Database	oe

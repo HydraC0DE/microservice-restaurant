@@ -1,82 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>hu.oe</groupId>
         <artifactId>yokudlela</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <!-- lookup parent from repository -->
     </parent>
+
     <packaging>jar</packaging>
     <artifactId>restaurant</artifactId>
     <name>restaurant</name>
-    <description>Restaurant menu service</description>
+    <description>Restaurant</description>
 
+    <dependencies>
 
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-<!--        <exclusions>
-            <exclusion>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-common</artifactId>
-            </exclusion>
-        </exclusions>
--->
-    </dependency>
-    <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        <version>2.8.5</version>
-    </dependency>
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <scope>provided</scope>
-    </dependency>
+        <!-- WEB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-    <dependency>
-        <groupId>io.swagger.core.v3</groupId>
-        <artifactId>swagger-annotations</artifactId>
-        <version>2.2.28</version>
-    </dependency>
+        <!-- OPENAPI UI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.5</version>
+        </dependency>
 
-    <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>3.1.1</version>
-    </dependency>
+        <!-- LOMBOK -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
+        <!-- SWAGGER ANNOTATIONS -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>2.2.28</version>
+        </dependency>
 
-    <dependency>
-        <groupId>org.openapitools</groupId>
-        <artifactId>jackson-databind-nullable</artifactId>
-        <version>0.2.6</version>
+        <!-- VALIDATION -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.1.1</version>
+        </dependency>
 
-    </dependency>
-    <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>8.0.2.Final</version>
-    </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.2.Final</version>
+        </dependency>
 
-</dependencies>
+        <!-- JPA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- POSTGRES -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- MODEL MAPPER -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
+    </dependencies>
 
     <build>
+
+        <finalName>restaurant</finalName>
+
         <plugins>
+
+            <!-- COMPILER -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-<!--                    <source>21</source>-->
-<!--                    <target>21</target>-->
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>21</source>
+                    <target>21</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -87,6 +110,7 @@
                 </configuration>
             </plugin>
 
+            <!-- CLEAN -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -128,6 +152,7 @@
                 </executions>
             </plugin>
 
+            <!-- OPENAPI GENERATOR -->
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -140,12 +165,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!--
-                                                        <templateDirectory>${project.basedir}/../_templates</templateDirectory>
-                            -->
+
                             <skipValidateSpec>true</skipValidateSpec>
-                            <inputSpecRootDirectory>${project.basedir}/src/main/resources/openapi
-                            </inputSpecRootDirectory>
+                            <inputSpecRootDirectory>${project.basedir}/src/main/resources/openapi</inputSpecRootDirectory>
                             <output>${project.build.sourceDirectory}</output>
                             <generatorName>spring</generatorName>
 
@@ -158,15 +180,19 @@
                             <generateModelTests>false</generateModelTests>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configurationFile>${project.basedir}/../conf.yaml</configurationFile>
+
                             <languageSpecificPrimitives>String,int,boolean,Double</languageSpecificPrimitives>
                             <typeMappings>array=List,map=Map,string=String,integer=int,number=Double</typeMappings>
+
                             <additionalProperties>
                                 <useLombok>true</useLombok>
                             </additionalProperties>
+
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <sourceFolder>/</sourceFolder>
+
                                 <additionalModelTypeAnnotations>
                                     @lombok.Data
                                     @lombok.NoArgsConstructor
@@ -187,6 +213,7 @@
                                 <performBeanValidation>true</performBeanValidation>
                                 <generateApis>false</generateApis>
                             </configOptions>
+
                             <typeMappings>LocalDate=Date</typeMappings>
                             <importMappings>
                                 <importMapping>Date=java.util.Date</importMapping>
@@ -197,7 +224,7 @@
                 </executions>
             </plugin>
 
-
+            <!-- SPRING BOOT -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -207,7 +234,6 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-
                         <configuration>
                             <mainClass>hu.oe.yokudlela.RestaurantApp</mainClass>
                         </configuration>
@@ -215,41 +241,33 @@
                 </executions>
             </plugin>
 
+            <!-- DOCKER -->
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.48.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <id>generate-docker</id>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>0.43.0</version>
                 <configuration>
                     <pushRegistry>docker.io</pushRegistry>
-<!--                    <authConfig>-->
-<!--                        <username>${env.DOCKER_USER}</username>-->
-<!--                        <password>${env.DOCKER_PASSWORD}</password>-->
-<!--                    </authConfig>-->
+                    <authConfig>
+                        <username>${env.DOCKER_USER}</username>
+                        <password>${env.DOCKER_PASSWORD}</password>
+                    </authConfig>
                     <images>
                         <image>
-                            <name>oe-java/oa-java</name>
+                            <name>oe-java/oe-java</name>
                             <build>
                                 <dockerFileDir>${project.basedir}/src/main/resources/docker/</dockerFileDir>
-<!--                                <assembly>-->
-<!--                                    <descriptorRef>artifact</descriptorRef>-->
-<!--                                </assembly>-->
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
                                 <tags>
-                                    <tag>core-v12</tag>
+                                    <tag>core-v1</tag>
                                 </tags>
                                 <assembly>
                                     <inline>
                                         <files>
                                             <file>
-                                                <source>${project.build.directory}/${project.build.finalName}.jar</source>
+                                                <source>${project.build.directory}/restaurant.jar</source>
                                                 <outputDirectory>./opt</outputDirectory>
                                                 <destName>application.jar</destName>
                                             </file>
@@ -259,15 +277,91 @@
                             </build>
                         </image>
                     </images>
-                    <!--                    <authConfig>
-                                            <username>${env.DOCKERHUB_USER}</username>
-                                            <password>${env.DOCKERHUB_PASSWORD}</password>
-                                        </authConfig>
-                    -->
                 </configuration>
             </plugin>
+
+            <!-- LIQUIBASE -->
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase-maven-plugin.version}</version>
+                <configuration>
+                    <propertyFile>src/main/resources/db/liquibase.properties</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>disable-run</id>
+                        <phase>spring-boot:run</phase>
+                        <configuration><skip>true</skip></configuration>
+                    </execution>
+                    <execution>
+                        <id>disable-install</id>
+                        <phase>install</phase>
+                        <configuration><skip>true</skip></configuration>
+                    </execution>
+                    <execution>
+                        <id>disable-clean</id>
+                        <phase>clean</phase>
+                        <configuration><skip>true</skip></configuration>
+                    </execution>
+                    <execution>
+                        <id>disable-package</id>
+                        <phase>package</phase>
+                        <configuration><skip>true</skip></configuration>
+                    </execution>
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>liquibase:update</phase>
+                        <goals><goal>update</goal></goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!-- HIBERNATE TOOLS -->
+            <plugin>
+                <groupId>org.hibernate.tool</groupId>
+                <artifactId>hibernate-tools-maven</artifactId>
+                <version>6.6.13.Final</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate.tool</groupId>
+                        <artifactId>hibernate-tools-orm</artifactId>
+                        <version>${hibernate-tools-orm.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                        <goals><goal>hbm2java</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <templatePath>../_templates/hibernate</templatePath>
+                    <packageName>hu.oe.yokudlela.restaurant.generated.entity</packageName>
+
+                    <revengFile>src/main/resources/hibernate.reveng.xml</revengFile>
+                    <propertyFile>src/main/resources/_hibernate.properties</propertyFile>
+                    <outputDirectory>src/main/java</outputDirectory>
+                    <ejb3>true</ejb3>
+                    <jdk5>true</jdk5>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
+
 
 
 </project>

@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-menu-item-create
+      author: Restaurant Service
+      labels: Menu item table creation
+      context: public
+      comment: Creates menu_item table based on OpenAPI MenuItem schema
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: menu_item
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  remarks: Unique identifier
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: MENU_ITEM_PK
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(255)
+                  remarks: Name of the food or drink
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: quantity
+                  type: integer
+                  remarks: Order quantity (1-20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category
+                  type: varchar(50)
+                  remarks: MAIN_COURSE, DESSERT, DRINK
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: sugar_free
+                  type: boolean
+                  remarks: Indicates if item is sugar-free
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: gluten_free
+                  type: boolean
+                  remarks: Indicates if item is gluten-free
+                  constraints:
+                    nullable: false

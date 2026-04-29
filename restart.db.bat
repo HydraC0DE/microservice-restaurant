@@ -1,0 +1,7 @@
+@echo off
+
+docker compose down
+docker compose up -d
+docker ps
+
+pause

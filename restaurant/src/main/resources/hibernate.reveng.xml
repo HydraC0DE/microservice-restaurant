@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC
+        "-//http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-reverse-engineering-3.0.dtd">
+
+<hibernate-reverse-engineering>
+
+    <type-mapping>
+        <sql-type jdbc-type="VARCHAR" hibernate-type="java.lang.String"/>
+        <sql-type jdbc-type="INTEGER" hibernate-type="java.lang.Integer"/>
+        <sql-type jdbc-type="BOOLEAN" hibernate-type="java.lang.Boolean"/>
+        <sql-type jdbc-type="TIMESTAMP" hibernate-type="java.time.LocalDateTime"/>
+        <sql-type jdbc-type="OTHER" hibernate-type="java.util.UUID"/>
+    </type-mapping>
+
+    <!-- Liquibase / system tables -->
+    <table-filter match-name="databasechangelog" exclude="true"/>
+    <table-filter match-name="databasechangeloglock" exclude="true"/>
+
+    <!-- MAIN TABLE -->
+    <table name="menu_item">
+
+        <column name="id" property="id">
+            <meta attribute="field-annotation">
+<!--                @jakarta.persistence.Id-->
+                @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+            </meta>
+        </column>
+
+        <column name="name" property="name"/>
+        <column name="quantity" property="quantity"/>
+        <column name="category" property="category"/>
+        <column name="sugar_free" property="sugarFree"/>
+        <column name="gluten_free" property="glutenFree"/>
+
+    </table>
+
+</hibernate-reverse-engineering>

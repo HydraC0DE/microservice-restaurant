@@ -1,34 +1,52 @@
+
 package hu.oe.yokudlela.restaurant.validation;
-import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItem;
-import hu.oe.yokudlela.restaurant.services.MenuService;
+
+import hu.oe.yokudlela.rdbms.MenuItemRepository;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Constraint(validatedBy = ValidOrderQuantityValidator.class)
 public @interface ValidOrderQuantity {
+
     String message();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
 
-@RequiredArgsConstructor
 @Slf4j
-class ValidOrderQuantityValidator implements ConstraintValidator<ValidOrderQuantity, MenuItem> {
+@RequiredArgsConstructor
+class ValidOrderQuantityValidator implements ConstraintValidator<ValidOrderQuantity, Integer> {
+
+    @Autowired
+    private MenuItemRepository menuItemRepository;
+
+    private String message;
 
     @Override
-    public boolean isValid(MenuItem item, ConstraintValidatorContext context) {
-        if (item == null) return true; //redundant?
+    public void initialize(ValidOrderQuantity constraintAnnotation) {
+        this.message = constraintAnnotation.message();
+    }
 
-        if ("DRINK".equals(item.getCategory()) && item.getQuantity() > 10) {
-            log.warn("Too many drinks ordered: {}", item.getQuantity());
+    @Override
+    public boolean isValid(Integer quantity, ConstraintValidatorContext context) {
+
+        if (quantity == null) {
+            return true;
+        }
+
+        // basic rule (teacher-style validation layer responsibility)
+        if (quantity < 1 || quantity > 20) {
+            log.warn("Invalid quantity: {}", quantity);
             return false;
         }
 

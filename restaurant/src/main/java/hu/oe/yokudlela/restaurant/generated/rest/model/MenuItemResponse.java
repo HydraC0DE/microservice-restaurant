@@ -18,7 +18,7 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * MenuItem
+ * MenuItemResponse
  */
 @lombok.Data
 @lombok.NoArgsConstructor
@@ -26,7 +26,7 @@ import jakarta.annotation.Generated;
 @lombok.Builder
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.10.0")
-public class MenuItem implements Serializable {
+public class MenuItemResponse implements Serializable {
 
   private static final long serialVersionUID = 1L;
 

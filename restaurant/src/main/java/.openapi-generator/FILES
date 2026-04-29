@@ -1,0 +1,8 @@
+README.md
+pom.xml
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/api/ApiUtil.java
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/api/MenuApi.java
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/model/ApiError.java
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/model/IdModel.java
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/model/MenuItemRequest.java
+src/main/java/hu/oe/yokudlela/restaurant/generated/rest/model/MenuItemResponse.java

@@ -1,40 +1,45 @@
 package hu.oe.yokudlela.restaurant.services;
 
-import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItem;
+import hu.oe.yokudlela.rdbms.MenuItemRepository;
+import hu.oe.yokudlela.restaurant.generated.entity.MenuItem;
+import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItemRequest;
+import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItemResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
 public class MenuService {
 
-    //private final MenuRepository menuRepository;
+    private final MenuItemRepository repository;
+    private final ModelMapper mapper;
 
     public boolean existsByName(String name) {
-       // return menuRepository.existsByName(name);
-        return true; //force invalid
+        return repository.existsByName(name);
     }
 
-    public List<MenuItem> findAll(Boolean sugarFree, Boolean glutenFree){
-        return null;
-        //return menuRepository.findAll().stream()
-  //              .filter(item -> sugarFree == null || item.getSugarFree().equals(sugarFree))
-    //            .filter(item -> glutenFree == null || item.getGlutenFree().equals(glutenFree))
-      //          .toList();
+    public List<MenuItemResponse> findAll(Boolean sugarFree, Boolean glutenFree) {
+        return ((List<MenuItem>) repository.findAll()).stream()
+                .filter(item -> sugarFree == null || item.isSugarFree() == sugarFree)
+                .filter(item -> glutenFree == null || item.isGlutenFree() == glutenFree)
+                .map(item -> mapper.map(item, MenuItemResponse.class))
+                .toList();
     }
 
-    public List<MenuItem> findAll() {
-        return findAll(null, null); // no filtering
+    public MenuItemResponse findById(Integer id) {
+        return mapper.map(repository.getById(id), MenuItemResponse.class);
     }
 
-    public MenuItem save(MenuItem menuItem) {
-        // In a real app, you'd call menuRepository.save(menuItem)
-        // For now, just return the item to satisfy the controller
-        return menuItem;
+    public MenuItemResponse save(MenuItemRequest request) {
+        MenuItem entity = mapper.map(request, MenuItem.class);
+        MenuItem saved = repository.save(entity);
+        return mapper.map(saved, MenuItemResponse.class);
+    }
+
+    public void delete(Integer id) {
+        repository.deleteById(id);
     }
 }
-
-

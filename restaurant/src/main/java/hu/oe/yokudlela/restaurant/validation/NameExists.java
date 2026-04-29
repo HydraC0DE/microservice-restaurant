@@ -1,11 +1,14 @@
+
 package hu.oe.yokudlela.restaurant.validation;
-import hu.oe.yokudlela.restaurant.services.MenuService;
+
+import hu.oe.yokudlela.rdbms.MenuItemRepository;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.*;
 
@@ -13,18 +16,19 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = NameExistsValidator.class)
-
 public @interface NameExists {
     String message();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 class NameExistsValidator implements ConstraintValidator<NameExists, String> {
 
-    private final MenuService menuService;  // inject
+    @Autowired
+    MenuItemRepository menuItemRepository;
+
     String message;
 
     @Override
@@ -34,7 +38,6 @@ class NameExistsValidator implements ConstraintValidator<NameExists, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isBlank()) return true;
-        return !menuService.existsByName(value);
+        return !menuItemRepository.existsByName(value);
     }
 }

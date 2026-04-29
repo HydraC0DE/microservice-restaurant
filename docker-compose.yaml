@@ -1,0 +1,22 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:17.5
+    hostname: postgres
+    environment:
+      - POSTGRES_USER=oeuser
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=oe
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_volumeOE:/var/lib/postgresql/data
+    networks:
+      - oe-network
+
+networks:
+  oe-network:
+    driver: bridge
+
+volumes:
+  pg_volumeOE:

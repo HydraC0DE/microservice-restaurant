@@ -6,8 +6,9 @@
 package hu.oe.yokudlela.restaurant.generated.rest.api;
 
 import hu.oe.yokudlela.restaurant.generated.rest.model.ApiError;
-import hu.oe.yokudlela.restaurant.generated.rest.model.MenuIdGet400Response;
-import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItem;
+import hu.oe.yokudlela.restaurant.generated.rest.model.IdModel;
+import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItemRequest;
+import hu.oe.yokudlela.restaurant.generated.rest.model.MenuItemResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,19 +42,27 @@ public interface DefaultApi {
 
     /**
      * GET /menu : Menüelemek listázása
-     * Lekérdezi az összes ételt és italt, opcionálisan szűrve cukormentes vagy gluténmentes elemekre.
+     * Lekérdezi az összes menüelemet opcionális szűréssel.
      *
-     * @param sugarFree Csak cukormentes elemek listázása (optional)
-     * @param glutenFree Csak gluténmentes elemek listázása (optional)
-     * @return Menüelemek sikeresen lekérdezve (status code 200)
+     * @param sugarFree  (optional)
+     * @param glutenFree  (optional)
+     * @return Sikeres lekérdezés (status code 200)
+     *         or Hibás kérés (status code 400)
+     *         or Szerver hiba (status code 500)
      */
     @Operation(
         operationId = "menuGet",
         summary = "Menüelemek listázása",
-        description = "Lekérdezi az összes ételt és italt, opcionálisan szűrve cukormentes vagy gluténmentes elemekre.",
+        description = "Lekérdezi az összes menüelemet opcionális szűréssel.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Menüelemek sikeresen lekérdezve", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MenuItem.class)))
+            @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MenuItemResponse.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Hibás kérés", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Szerver hiba", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
     )
@@ -63,28 +72,23 @@ public interface DefaultApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<MenuItem>> menuGet(
-        @Parameter(name = "sugarFree", description = "Csak cukormentes elemek listázása", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sugarFree", required = false) Boolean sugarFree,
-        @Parameter(name = "glutenFree", description = "Csak gluténmentes elemek listázása", in = ParameterIn.QUERY) @Valid @RequestParam(value = "glutenFree", required = false) Boolean glutenFree
+    ResponseEntity<List<MenuItemResponse>> menuGet(
+        @Parameter(name = "sugarFree", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sugarFree", required = false) Boolean sugarFree,
+        @Parameter(name = "glutenFree", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "glutenFree", required = false) Boolean glutenFree
     );
 
 
     /**
-     * GET /menu/gluten-free : List only gluten-free menu items
+     * GET /menu/gluten-free : Gluténmentes elemek listázása
      *
-     * @return Successfully retrieved gluten-free menu items (status code 200)
-     *         or Bad request (status code 400)
+     * @return Sikeres lekérdezés (status code 200)
      */
     @Operation(
         operationId = "menuGlutenFreeGet",
-        summary = "List only gluten-free menu items",
-        tags = { "Default" },
+        summary = "Gluténmentes elemek listázása",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved gluten-free menu items", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MenuItem.class)))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad request", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MenuItemResponse.class)))
             })
         }
     )
@@ -94,27 +98,25 @@ public interface DefaultApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<MenuItem>> menuGlutenFreeGet(
+    ResponseEntity<List<MenuItemResponse>> menuGlutenFreeGet(
         
     );
 
 
     /**
      * DELETE /menu/{id} : Menüelem törlése
-     * Menüelem törlése ID alapján.
      *
      * @param id  (required)
-     * @return Menüelem sikeresen törölve (status code 204)
-     *         or A menüelem nem található (status code 400)
+     * @return Sikeres törlés (status code 204)
+     *         or Nem található (status code 404)
      */
     @Operation(
         operationId = "menuIdDelete",
         summary = "Menüelem törlése",
-        description = "Menüelem törlése ID alapján.",
         responses = {
-            @ApiResponse(responseCode = "204", description = "Menüelem sikeresen törölve"),
-            @ApiResponse(responseCode = "400", description = "A menüelem nem található", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuIdGet400Response.class))
+            @ApiResponse(responseCode = "204", description = "Sikeres törlés"),
+            @ApiResponse(responseCode = "404", description = "Nem található", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
     )
@@ -131,22 +133,20 @@ public interface DefaultApi {
 
     /**
      * GET /menu/{id} : Menüelem lekérdezése
-     * Egy adott menüelem lekérdezése ID alapján.
      *
      * @param id  (required)
-     * @return Menüelem sikeresen lekérdezve (status code 200)
-     *         or A menüelem nem található (status code 400)
+     * @return Sikeres lekérdezés (status code 200)
+     *         or Nem található (status code 404)
      */
     @Operation(
         operationId = "menuIdGet",
         summary = "Menüelem lekérdezése",
-        description = "Egy adott menüelem lekérdezése ID alapján.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Menüelem sikeresen lekérdezve", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuItem.class))
+            @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuItemResponse.class))
             }),
-            @ApiResponse(responseCode = "400", description = "A menüelem nem található", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuIdGet400Response.class))
+            @ApiResponse(responseCode = "404", description = "Nem található", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
     )
@@ -156,30 +156,28 @@ public interface DefaultApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<MenuItem> menuIdGet(
+    ResponseEntity<MenuItemResponse> menuIdGet(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
 
     /**
      * PUT /menu/{id} : Menüelem módosítása
-     * Menüelem módosítása ID alapján.
      *
      * @param id  (required)
-     * @param menuItem  (required)
-     * @return Menüelem sikeresen módosítva (status code 200)
-     *         or A menüelem nem található (status code 400)
+     * @param menuItemRequest  (required)
+     * @return Sikeres módosítás (status code 200)
+     *         or Nem található (status code 404)
      */
     @Operation(
         operationId = "menuIdPut",
         summary = "Menüelem módosítása",
-        description = "Menüelem módosítása ID alapján.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Menüelem sikeresen módosítva", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuItem.class))
+            @ApiResponse(responseCode = "200", description = "Sikeres módosítás", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = IdModel.class))
             }),
-            @ApiResponse(responseCode = "400", description = "A menüelem nem található", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuIdGet400Response.class))
+            @ApiResponse(responseCode = "404", description = "Nem található", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
     )
@@ -190,29 +188,29 @@ public interface DefaultApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<MenuItem> menuIdPut(
+    ResponseEntity<IdModel> menuIdPut(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "MenuItem", description = "", required = true) @Valid @RequestBody MenuItem menuItem
+        @Parameter(name = "MenuItemRequest", description = "", required = true) @Valid @RequestBody MenuItemRequest menuItemRequest
     );
 
 
     /**
-     * POST /menu : Új menüelem hozzáadása
-     * Új étel vagy ital hozzáadása a menühöz.
+     * POST /menu : Új menüelem létrehozása
+     * Új étel vagy ital hozzáadása
      *
-     * @param menuItem  (required)
-     * @return Menüelem sikeresen hozzáadva (status code 201)
-     *         or A menüelem már létezik (status code 400)
+     * @param menuItemRequest  (required)
+     * @return Sikeres létrehozás (status code 201)
+     *         or Hibás kérés (status code 400)
      */
     @Operation(
         operationId = "menuPost",
-        summary = "Új menüelem hozzáadása",
-        description = "Új étel vagy ital hozzáadása a menühöz.",
+        summary = "Új menüelem létrehozása",
+        description = "Új étel vagy ital hozzáadása",
         responses = {
-            @ApiResponse(responseCode = "201", description = "Menüelem sikeresen hozzáadva", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = MenuItem.class))
+            @ApiResponse(responseCode = "201", description = "Sikeres létrehozás", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = IdModel.class))
             }),
-            @ApiResponse(responseCode = "400", description = "A menüelem már létezik", content = {
+            @ApiResponse(responseCode = "400", description = "Hibás kérés", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
             })
         }
@@ -224,8 +222,8 @@ public interface DefaultApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<MenuItem> menuPost(
-        @Parameter(name = "MenuItem", description = "", required = true) @Valid @RequestBody MenuItem menuItem
+    ResponseEntity<IdModel> menuPost(
+        @Parameter(name = "MenuItemRequest", description = "", required = true) @Valid @RequestBody MenuItemRequest menuItemRequest
     );
 
 }
